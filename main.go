@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"my-first-app/apiCustomer"
+	apiCustomer "my-first-app/apiCustomerV1.0"
 	"my-first-app/database"
 )
 
