@@ -15,13 +15,13 @@ func GetAllCustomers(c echo.Context) error {
 	// Mengambil koneksi database
 	db, err := database.ConnectDB()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Gagal mengambil koneksi database"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "connection failed"})
 	}
 	defer db.Close()
 
 	customers, err := entities.GetAllCustomers(db)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Gagal mengambil daftar customer"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "customer loading data failed"})
 	}
 
 	out, err := json.Marshal(customers)
