@@ -13,7 +13,6 @@ func ConnectDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Memeriksa koneksi ke database
 	err = db.Ping()
 	if err != nil {
 		return nil, err
