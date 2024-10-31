@@ -23,7 +23,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
 	})
-	e.GET("/customers", apiCustomer.GetAllCustomers)
+	e.GET("/customers", apiCustomer.GetAll)
+	e.POST("/customers", apiCustomer.AddNew)
 
 	e.Logger.Fatal(e.Start(":9031"))
 }
