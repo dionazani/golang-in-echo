@@ -1,4 +1,4 @@
-package apiCustomer
+package apiCustomerV1
 
 type CustomerModel struct {
 	Id                     int32  `json:"id"`

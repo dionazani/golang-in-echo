@@ -6,7 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	apiCustomer "my-first-app/apiCustomerV1.0"
+	apiCustomer "my-first-app/apiCustomerV1"
 	"my-first-app/database"
 )
 
@@ -23,8 +23,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
 	})
-	e.GET("/customers", apiCustomer.GetAll)
-	e.POST("/customers", apiCustomer.AddNew)
+	e.GET("/customers", apiCustomer.CustomerControllerGetAll)
+	e.POST("/customers", apiCustomer.CustomerControllerAddNew)
 
 	e.Logger.Fatal(e.Start(":9031"))
 }
