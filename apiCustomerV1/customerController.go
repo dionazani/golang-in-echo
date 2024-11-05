@@ -1,12 +1,11 @@
 package apiCustomerV1
 
 import (
+	"my-first-app/models"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
-
-	"my-first-app/models"
 )
 
 // function get all customer

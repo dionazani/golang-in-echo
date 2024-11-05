@@ -20,11 +20,11 @@ func main() {
 	defer db.Close()
 
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
+	e.GET("/api/v1/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello World")
 	})
-	e.GET("/customers", apiCustomer.CustomerControllerGetAll)
-	e.POST("/customers", apiCustomer.CustomerControllerAddNew)
+	e.GET("/api/v1/customers", apiCustomer.CustomerControllerGetAll)
+	e.POST("/api/v1/customers", apiCustomer.CustomerControllerAddNew)
 
 	e.Logger.Fatal(e.Start(":9031"))
 }
