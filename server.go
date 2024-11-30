@@ -25,6 +25,7 @@ func main() {
 	})
 	e.GET("/api/v1/customers", apiCustomer.CustomerControllerGetAll)
 	e.POST("/api/v1/customers", apiCustomer.CustomerControllerAddNew)
+	e.PUT("/api/v1/customers/:id", apiCustomer.CustomerControllerUpdate)
 
 	e.Logger.Fatal(e.Start(":9031"))
 }

@@ -50,16 +50,35 @@ func CustomerEntityInsert(db *sql.DB, customerEntity *CustomerEntity) int64 {
 
 	if err != nil {
 		customerIdInserted = 0
-		return customerIdInserted
 	} else {
 		id, err := res.LastInsertId()
 		if err != nil {
 			customerIdInserted = 0
-			return customerIdInserted
 		} else {
 			customerIdInserted = id
 		}
 	}
 
 	return customerIdInserted
+}
+
+func CustomerEntityUpdate(db *sql.DB, customerEntity *CustomerEntity) int64 {
+
+	var customerUpdated int64 = 0
+
+	_, err := db.Exec("UPDATE customer set customer_name = ?,customer_gender=?,customer_identity_number=?,customer_birth_place=?,customer_birth_date = ? WHERE id=?",
+		customerEntity.CustomerName,
+		customerEntity.CustomerGender,
+		customerEntity.CustomerIdentityNumber,
+		customerEntity.CustomerBirthPlace,
+		customerEntity.CustomerBirthDate,
+		customerEntity.Id)
+
+	if err != nil {
+		customerUpdated = 0
+	} else {
+		customerUpdated = 1
+	}
+
+	return customerUpdated
 }

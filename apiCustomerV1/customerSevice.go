@@ -15,15 +15,8 @@ func CustomerServiceGetAll() models.ResponseModel {
 
 	// check connection
 	if err != nil {
-
-		var responseModel models.ResponseModel
 		now := time.Now()
-
-		responseModel.HttpCode = 400
-		responseModel.Status = "fail"
-		responseModel.Message = err.Error()
-		responseModel.Timestamp = now.Unix()
-
+		var responseModel models.ResponseModel = models.SetResponseModel(400, "fail", err.Error(), now.Unix(), "")
 		return responseModel
 	}
 
@@ -32,14 +25,8 @@ func CustomerServiceGetAll() models.ResponseModel {
 	// get data from table customer
 	customers, err := entities.CustomerEntityGetAll(db)
 	if err != nil {
-		var responseModel models.ResponseModel
 		now := time.Now()
-
-		responseModel.HttpCode = 400
-		responseModel.Status = "fail"
-		responseModel.Message = err.Error()
-		responseModel.Timestamp = now.Unix()
-
+		var responseModel models.ResponseModel = models.SetResponseModel(400, "fail", err.Error(), now.Unix(), "")
 		return responseModel
 	}
 
@@ -67,36 +54,26 @@ func CustomerServiceGetAll() models.ResponseModel {
 		panic(err)
 	}
 
-	var responseModel models.ResponseModel
 	now := time.Now()
-
-	responseModel.HttpCode = 200
-	responseModel.Status = "ok"
-	responseModel.Message = "data found"
-	responseModel.Timestamp = now.Unix()
-	responseModel.Data = string(rm)
+	var responseModel models.ResponseModel = models.SetResponseModel(200, "ok", "data found", now.Unix(), string(rm))
 
 	return responseModel
-
 }
 
+// add new customer
 func CustomerServiceAddNew(customerModel *CustomerModel) models.ResponseModel {
 
+	// check database connection.
 	db, err := database.ConnectDB()
 	if err != nil {
-		var responseModel models.ResponseModel
 		now := time.Now()
-
-		responseModel.HttpCode = 400
-		responseModel.Status = "fail"
-		responseModel.Message = err.Error()
-		responseModel.Timestamp = now.Unix()
-
+		var responseModel models.ResponseModel = models.SetResponseModel(400, "fail", err.Error(), now.Unix(), "")
 		return responseModel
 	}
 
 	defer db.Close()
 
+	// insert new customer
 	var customerEntity entities.CustomerEntity
 	customerEntity.CustomerName = customerModel.CustomerName
 	customerEntity.CustomerGender = customerModel.CustomerGender
@@ -105,34 +82,52 @@ func CustomerServiceAddNew(customerModel *CustomerModel) models.ResponseModel {
 	customerEntity.CustomerBirthDate = customerModel.CustomerBirthDate
 	var customerIdInserted int64 = entities.CustomerEntityInsert(db, &customerEntity)
 
+	// check customerId.
 	if customerIdInserted == 0 {
-		var responseModel models.ResponseModel
-		now := time.Now()
 
-		responseModel.HttpCode = 400
-		responseModel.Status = "fail"
-		responseModel.Message = "no data found"
-		responseModel.Timestamp = now.Unix()
+		now := time.Now()
+		var responseModel models.ResponseModel = models.SetResponseModel(400, "fail", "cannot insert new customer", now.Unix(), "")
 
 		return responseModel
 	}
 
-	var responseModel models.ResponseModel
-	now := time.Now()
-
-	var data map[string]int64
-	data = map[string]int64{}
+	var data = map[string]int64{}
 	data["customerId"] = customerIdInserted
 	jData, err := json.Marshal(data["customerId"])
 	if err != nil {
-		panic(err)
+		data["customerId"] = 0
 	}
 
-	responseModel.HttpCode = 400
-	responseModel.Status = "fail"
-	responseModel.Message = "success"
-	responseModel.Timestamp = now.Unix()
-	responseModel.Data = string(jData)
+	now := time.Now()
+	var responseModel models.ResponseModel = models.SetResponseModel(201, "created", "success", now.Unix(), string(jData))
+
+	return responseModel
+}
+
+// add new customer
+func CustomerServiceUpdate(customerModel *CustomerModel) models.ResponseModel {
+
+	// check database connection.
+	db, err := database.ConnectDB()
+	if err != nil {
+		now := time.Now()
+		var responseModel models.ResponseModel = models.SetResponseModel(400, "fail", err.Error(), now.Unix(), "")
+		return responseModel
+	}
+
+	defer db.Close()
+
+	// update customer.
+	var customerEntity entities.CustomerEntity
+	customerEntity.Id = customerModel.Id
+	customerEntity.CustomerName = customerModel.CustomerName
+	customerEntity.CustomerGender = customerModel.CustomerGender
+	customerEntity.CustomerIdentityNumber = customerModel.CustomerIdentityNumber
+	customerEntity.CustomerBirthPlace = customerModel.CustomerBirthPlace
+	customerEntity.CustomerBirthDate = customerModel.CustomerBirthDate
+
+	now := time.Now()
+	var responseModel models.ResponseModel = models.SetResponseModel(200, "success", "success", now.Unix(), "")
 
 	return responseModel
 }
